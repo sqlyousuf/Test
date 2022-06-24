@@ -1,0 +1,161 @@
+--===============================================
+--Create Master Key
+--===============================================
+USE MASTER;
+GO
+CREATE MASTER KEY ENCRYPTION
+BY PASSWORD='';
+GO
+
+--===============================================
+--Create TDE Certificate
+--===============================================
+CREATE CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022]
+WITH 
+SUBJECT='SV-DEV-DATA2_DatabaseEncryption_2022',
+EXPIRY_DATE='12/31/2022';
+GO
+ 
+--===============================================
+--Create Database Key and enable Encryption
+--===============================================
+USE WTIAppBase
+GO
+ALTER DATABASE ENCRYPTION KEY
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+ALTER DATABASE WTIAppBase
+SET ENCRYPTION ON;
+GO
+
+USE WTICompleat
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTICompleat
+--SET ENCRYPTION ON;
+--GO
+
+--USE WTIGoPnr
+--GO
+--ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+--ENCRYPTION BY SERVER CERTIFICATE TDE_Cert;
+--GO
+
+--ALTER DATABASE WTIGoPnr
+--SET ENCRYPTION ON;
+--GO
+
+USE WTIGlobalImport
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTIGlobalImport
+--SET ENCRYPTION ON;
+--GO
+
+USE WTIGlobalware
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTIGlobalware
+--SET ENCRYPTION ON;
+--GO
+
+USE WTIProcessStaging
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTIProcessStaging
+--SET ENCRYPTION ON;
+--GO
+
+USE WTIRadius
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTIRadius
+--SET ENCRYPTION ON;
+--GO
+
+USE WTIReportControl
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTIReportControl
+--SET ENCRYPTION ON;
+--GO
+
+USE WTISureware
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTISureware
+--SET ENCRYPTION ON;
+--GO
+
+USE WTITravelApprovals
+GO
+ALTER DATABASE ENCRYPTION KEY
+--WITH ALGORITHM = AES_256
+ENCRYPTION BY SERVER CERTIFICATE [SV-DEV-DATA2_TDE_Cert_2022];
+GO
+
+--ALTER DATABASE WTITravelApprovals
+--SET ENCRYPTION ON;
+--GO
+
+
+--===============================================
+--Backup Certificate
+--===============================================
+USE master
+GO
+BACKUP CERTIFICATE TDE_Cert
+TO FILE = 'F:\SQL_Backup\Certificates\SV-PROD-DATA2-TDECert.cer'
+WITH PRIVATE KEY (file='F:\SQL_Backup\Certificates\SV-PROD-DATA2-TDECertKey.pvk',
+ENCRYPTION BY PASSWORD='') 
+GO
+
+----===============================================
+----Restore Certificate
+----===============================================
+--USE Master;
+--GO
+--CREATE MASTER KEY ENCRYPTION
+--BY PASSWORD='InsertStrongPasswordHere';
+--GO
+--USE MASTER
+--GO
+--CREATE CERTIFICATE TDECert
+--FROM FILE = 'C:\Temp\TDE_Cert'
+--WITH PRIVATE KEY (FILE = 'C:\TDECert_Key.pvk',
+--DECRYPTION BY PASSWORD = 'InsertStrongPasswordHere' );
+ 
+ OPEN MASTER KEY DECRYPTION BY PASSWORD = '';  
+BACKUP MASTER KEY TO FILE = 'F:\SQL_Backup\Certificates\SV-PROD-DATA2-TDEMasterKey.pvk'   
+    ENCRYPTION BY PASSWORD = '';  --Use different password
+GO  
